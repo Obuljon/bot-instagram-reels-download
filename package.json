@@ -4,7 +4,7 @@
   "description": "",
   "main": "bot.js",
   "scripts": {
-    "start": "node bot.js",
+    "start": "node src/index.js",
     "test": "echo \"Testlar hali qo'shilmagan\""
   },
   "keywords": [],

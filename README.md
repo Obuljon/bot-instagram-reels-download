@@ -36,6 +36,7 @@ cp .env.example .env
 ```env
 BOT_TOKEN=1234567890:ABCdefGHIjklMNOpqrsTUVwxyz
 CHROME_PATH=/opt/google/chrome/chrome
+REQUIRED_CHANNELS=https://t.me/itpark_xonqa,@my_group
 ```
 
 > **BOT_TOKEN** ni [@BotFather](https://t.me/BotFather) dan olasiz:
@@ -43,6 +44,11 @@ CHROME_PATH=/opt/google/chrome/chrome
 > 2. Bot nomini kiriting
 > 3. Username kiriting (oxiri `bot` bilan tugashi kerak)
 > 4. Token nusxalab `.env` ga joylashtiring
+
+> `REQUIRED_CHANNELS` ixtiyoriy. Agar to'ldirilsa, foydalanuvchi botdan foydalanishdan oldin shu kanal/guruhlarga obuna bo'lgan bo'lishi kerak.
+> `https://t.me/...`, `@username` yoki chat ID formatlari qo'llanadi.
+> Botni tekshiriladigan kanal/guruhning o'ziga admin qilib qo'ying.
+> Agar bot foydalanuvchi membership'ini o'qiy olmasa, qat'iy obuna tekshiruvi yoqilmaydi va startup xato bilan to'xtaydi.
 
 ---
 
@@ -67,6 +73,11 @@ Muvaffaqiyatli boshlansa:
 | `/start` | Botni boshlash, xush kelibsiz xabari |
 | `/help` | Yordam ma'lumotlari |
 | Instagram URL | Yuklab beradi |
+
+Agar `REQUIRED_CHANNELS` sozlangan bo'lsa:
+- bot avval foydalanuvchi obunasini tekshiradi
+- obuna bo'lmagan kanal/guruhlar uchun tugmalarni ko'rsatadi
+- foydalanuvchi obuna bo'lgach, oldingi buyruq yoki yuborgan linki davom ettiriladi
 
 **Qo'llab-quvvatlanadigan havolalar:**
 ```

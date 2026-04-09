@@ -26,9 +26,20 @@ const INVALID_URL_MESSAGE =
 const LOADING_MESSAGE = "⏳ Yuklanmoqda, iltimos kuting...";
 const NO_MEDIA_FOUND_MESSAGE =
   "❌ Media topilmadi. Havola ochiq (public) ekanligini tekshiring.";
+const SUBSCRIPTION_CHECK_FAILED_MESSAGE =
+  "⚠️ Obunani tekshirib bo'lmadi. Bot REQUIRED_CHANNELS dagi aynan shu kanal yoki guruhda admin bo'lishi kerak.";
+const SUBSCRIPTION_CONFIRMED_MESSAGE =
+  "✅ Obuna tasdiqlandi. Endi buyruq yoki Instagram havolasini yuboring.";
 
 function getMediaFoundMessage(count) {
   return `✅ ${count} ta media topildi! Yuborilmoqda...`;
+}
+
+function getNotSubscribedMessage(count) {
+  return (
+    `🔒 Botdan foydalanish uchun ${count} ta majburiy kanal yoki guruhga obuna bo'ling.\n\n` +
+    `Pastdagi tugmalar orqali obuna bo'lib, keyin "Obuna bo'ldim, tekshiring!" tugmasini bosing.`
+  );
 }
 
 function getMediaCaption(type, index, total) {
@@ -53,9 +64,12 @@ module.exports = {
   INVALID_URL_MESSAGE,
   LOADING_MESSAGE,
   NO_MEDIA_FOUND_MESSAGE,
+  SUBSCRIPTION_CHECK_FAILED_MESSAGE,
+  SUBSCRIPTION_CONFIRMED_MESSAGE,
   getMainErrorMessage,
   getMediaCaption,
   getMediaFoundMessage,
   getMediaSendErrorMessage,
+  getNotSubscribedMessage,
   getStartMessage,
 };
