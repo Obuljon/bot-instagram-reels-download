@@ -1,71 +1,46 @@
 const fs = require("fs");
-const http = require("http");
 const https = require("https");
+const http = require("http");
 
-const DOWNLOAD_TIMEOUT_MS = 30000;
+const DOWNLOAD_TIMEOUT_MS = 45000; // 45 sekund
 
-function cleanupFile(filePath) {
-  fs.unlink(filePath, () => {});
-}
-
-function downloadFile(url, destinationPath) {
+async function downloadFile(url, destinationPath) {
   return new Promise((resolve, reject) => {
     const protocol = url.startsWith("https") ? https : http;
     const file = fs.createWriteStream(destinationPath);
-    let isSettled = false;
 
-    const handleFailure = (error) => {
-      if (isSettled) {
-        return;
-      }
-
-      isSettled = true;
-      file.close(() => cleanupFile(destinationPath));
-      reject(error);
-    };
-
-    const handleSuccess = () => {
-      if (isSettled) {
-        return;
-      }
-
-      isSettled = true;
-      resolve();
-    };
-
-    const request = protocol.get(url, (response) => {
+    const req = protocol.get(url, { timeout: DOWNLOAD_TIMEOUT_MS }, (response) => {
       if (response.statusCode === 301 || response.statusCode === 302) {
-        const redirectUrl = response.headers.location;
-
-        file.close(() => cleanupFile(destinationPath));
-
-        if (!redirectUrl) {
-          reject(new Error("Redirect manzili topilmadi"));
-          return;
-        }
-
-        downloadFile(redirectUrl, destinationPath).then(resolve).catch(reject);
-        return;
+        return downloadFile(response.headers.location, destinationPath)
+          .then(resolve)
+          .catch(reject);
       }
 
       if (response.statusCode !== 200) {
-        handleFailure(new Error(`Server ${response.statusCode} qaytardi`));
-        return;
+        return reject(new Error(`HTTP ${response.statusCode}`));
       }
 
       response.pipe(file);
-      file.on("finish", () => file.close(handleSuccess));
+
+      file.on("finish", () => {
+        file.close();
+        resolve();
+      });
     });
 
-    request.on("error", handleFailure);
-    file.on("error", handleFailure);
+    req.on("error", (err) => {
+      file.close();
+      fs.unlink(destinationPath, () => {});
+      reject(err);
+    });
 
-    request.setTimeout(DOWNLOAD_TIMEOUT_MS, () => {
-      request.destroy(new Error("Yuklab olish vaqti tugadi (timeout)"));
+    req.setTimeout(DOWNLOAD_TIMEOUT_MS, () => {
+      req.destroy();
+      file.close();
+      fs.unlink(destinationPath, () => {});
+      reject(new Error("Download timeout"));
     });
   });
 }
 
-module.exports = {
-  downloadFile,
-};
+module.exports = { downloadFile };

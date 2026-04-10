@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  instagram-bot:
+    build: .
+    container_name: instagram-reels-bot
+    restart: unless-stopped
+    environment:
+      - BOT_TOKEN=${BOT_TOKEN}
+      - CHROME_PATH=/usr/bin/chromium
+      - REQUIRED_CHANNELS=${REQUIRED_CHANNELS}
+    env_file:
+      - .env
+    # Loglarni ko'rish uchun
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
