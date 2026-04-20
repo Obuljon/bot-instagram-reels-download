@@ -5,17 +5,10 @@ services:
     build: .
     container_name: instagram-reels-bot
     restart: unless-stopped
-    ports:
-      - "10000:10000"  # Health check va webhook port
     environment:
       - BOT_TOKEN=${BOT_TOKEN}
       - CHROME_PATH=/usr/bin/chromium
       - REQUIRED_CHANNELS=${REQUIRED_CHANNELS}
-      - WEBHOOK_PORT=10000
-      - USE_POLLING=${USE_POLLING:-true}
-      # Webhook uchun (ixtiyoriy): WEBHOOK_URL=https://yourdomain.com
-      # - WEBHOOK_URL=${WEBHOOK_URL}
-      # - WEBHOOK_SECRET_PATH=${WEBHOOK_SECRET_PATH:-/webhook}
     env_file:
       - .env
     logging:
@@ -23,10 +16,3 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-    # Health check
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:10000/"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s

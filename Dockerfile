@@ -5,7 +5,6 @@ FROM node:20-slim
 RUN apt-get update && apt-get install -y \
     chromium \
     ca-certificates \
-    curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Ish faylini belgilang
@@ -22,9 +21,6 @@ COPY . .
 
 # Chrome yo'li o'rnatish
 ENV CHROME_PATH=/usr/bin/chromium
-
-# Port (agar kerak bo'lsa)
-EXPOSE 3000
 
 # Botni ishga tushirish
 CMD ["npm", "start"]
